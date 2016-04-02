@@ -32,7 +32,79 @@ struct node{
 	int data;
 	struct node *next;
 };
+void normalize(struct node *head){
+	struct node *temp = head;
+	while (temp->next != head){
+		temp = temp->next;
+
+	}
+	temp->next = NULL;
+}
+void swap(struct node **head1, struct node **head2){
+	struct node *temp;
+	temp = *head1;
+	*head1 = *head2;
+	*head2 = temp;
+}
+int lenOfLL(struct node *head){
+	int len = 0;
+	struct node *temp=head;
+	while (temp){
+		len++;
+		temp = temp->next;
+	}
+	return len;
+}
+
+struct node* mergeHelper(struct node *head1, struct node *head2){
+	struct node *temp = head1;
+	while (head1 != NULL && head2 != NULL){
+		while (head1->data < head2->data){
+			if (head1 && head2){
+				temp->next = head1;
+				temp = head1;
+				head1 = head1->next;
+			}
+		}
+
+		while (head1 && head2 && head1->data >= head2->data){
+			temp->next = head2;
+			temp = head2;
+			head2 = head2->next;
+		}
+
+	}
+	while (head1){
+		temp->next = head1;
+		temp = head1;
+		head1 = head1->next;
+	}
+	while (head2){
+		temp->next = head2;
+		temp = head2;
+		head2 = head2->next;
+	}
+	return head1;
+}
 int merge_circularlists(struct node **head1, struct node **head2){
 	//Returns Length of merged Sorted circular SLL and also points *head1 to final SLL .
-	return -1;
+	if (head1 && head2 && *head1 && *head2){
+		int length=0;
+		normalize(*head1);
+		normalize(*head2);
+		struct node *temp1 = *head1, *temp2=*head2;
+		if (temp1->data > temp2->data){
+			swap(head1, head2);
+		}
+		*head1 = mergeHelper(*head1, *head2);
+		struct node *temp = *head1;
+		while (temp->next){
+			temp = temp->next;
+		}
+		temp->next = *head1;
+		return lenOfLL(*head1);
+	}
+	else{
+		return -1;
+	}
 }

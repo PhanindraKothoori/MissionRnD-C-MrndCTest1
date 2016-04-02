@@ -27,8 +27,55 @@ struct node{
 	int data;
 	struct node *next;
 };
-
-
+int leapYears(int year, int month);
+int leapYears(int year,int month){
+	
+	if (month <= 2){
+		year--;
+	}
+	int nonleaps = year/100;
+	return (year / 4) + (year / 400) - nonleaps;
+}
 int between_days(struct node *date1head, struct node *date2head){
-	return -1;
+	int days[12] = { 31, 28, 31, 30, 31, 30,31, 31, 30, 31, 30, 31 };
+	if (date1head && date2head){
+		int date1[4] = { 0 }, date2[4] = { 0 };
+		struct node *temp = date1head;
+		int count = 0;
+		while (temp){
+			date1[count] = (temp->data) * 10 + (temp->next)->data;
+			temp = temp->next->next;
+			count++;
+		}
+		count = 0;
+		temp = date2head;
+		while (temp){
+			date2[count] = (temp->data) * 10 + (temp->next)->data;
+			temp = temp->next->next;
+			count++;
+		}
+		if (date1[1] == date2[1] && date1[2] == date2[2] && date1[3] == date2[3]){
+			if (date1[0] == date2[0]){
+				return 0;
+			}
+			
+		}
+
+
+		unsigned long int days1 = (date1[2] * 100 + date1[3]) * 365;
+		unsigned long int days2 = (date2[2] * 100 + date2[3]) * 365;
+		for (int i = 0; i < date1[1] - 1; i++){
+			days1 += days[i];
+		}
+		days1 += leapYears(date1[2] * 100 + date1[3],date1[1]) + date1[0];
+		for (int i = 0; i < date2[1] - 1; i++){
+			days2 += days[i];
+		}
+		days2 += leapYears(date2[2] * 100 + date2[3],date2[1]) + date2[0];
+
+		return days2 - days1 - 1;
+	}
+	else{
+		return -1;
+	}
 }
